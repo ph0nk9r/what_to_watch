@@ -24,7 +24,7 @@ def index_view():
         return 'В базе данных мнений о фильмах нет.'
     offset_value = randrange(quantity)
     opinion = Opinion.query.offset(offset_value).first()
-    return render_template('index.html')
+    return render_template('index.html', opinion=opinion)
 
 if __name__ == '__main__':
     app.run()
