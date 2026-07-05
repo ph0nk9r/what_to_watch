@@ -24,11 +24,16 @@ def index_view():
         return 'В базе данных мнений о фильмах нет.'
     offset_value = randrange(quantity)
     opinion = Opinion.query.offset(offset_value).first()
-    return render_template('index.html', opinion=opinion)
+    return render_template('opinion.html', opinion=opinion)
 
 @app.route('/add')
 def add_opinion_view():
-    return 'Страница в разработке!'
+    return render_template('add_opinion.html')
+
+@app.route('/opinions/<int:id>')  
+def opinion_view(id):  
+    opinion = Opinion.query.get_or_404(id)
+    return render_template('opinion.html', opinion=opinion) 
 
 if __name__ == '__main__':
     app.run()
