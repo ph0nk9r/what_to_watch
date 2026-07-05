@@ -2,9 +2,10 @@ from datetime import datetime
 from random import randrange
 import os
 
-from flask_wtf import FlaskForm
 from flask import Flask, abort, flash, redirect, render_template, url_for
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
 from dotenv import load_dotenv
 from wtforms import StringField, SubmitField, TextAreaField, URLField
 from wtforms.validators import DataRequired, Length, Optional
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class Opinion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
