@@ -6,13 +6,18 @@ from . import app, db
 from .forms import OpinionForm
 from .models import Opinion
 
+def random_opinion():
+    quantity = Opinion.query.count()
+    if quantity:
+        offset_value = randrange(quantity)
+        opinion = Opinion.query.offset(offset_value).first()
+        return opinion
+
 @app.route('/')
 def index_view():
-    quantity = Opinion.query.count()
-    if not quantity:
+    opinion = random_opinion()
+    if opinion is None:
         abort(500)
-    offset_value = randrange(quantity)
-    opinion = Opinion.query.offset(offset_value).first()
     return render_template('opinion.html', opinion=opinion)
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -37,12 +42,3 @@ def add_opinion_view():
 def opinion_view(id):  
     opinion = Opinion.query.get_or_404(id)
     return render_template('opinion.html', opinion=opinion) 
-
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    return render_template('500.html'), 500
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html'), 404
